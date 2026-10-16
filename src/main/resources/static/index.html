@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusBrain | CSE Knowledge Hub</title>
+<style>
+:root{--primary:#635bff;--dark:#19182e;--muted:#777b91;--bg:#f5f6fc;--border:#e7e8f2}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--dark)}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.login-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:white}
+.login-art{padding:55px;color:white;background:linear-gradient(145deg,#181633,#5145e5 75%,#938cff);display:flex;flex-direction:column;justify-content:space-between}
+.brand{font-size:25px;font-weight:800;letter-spacing:-.7px}.brand span{color:#a9a4ff}
+.art-content{max-width:460px}.art-content h1{font-size:clamp(38px,4vw,58px);line-height:1.08;margin:0 0 20px}.art-content p{color:#e2e0ff;line-height:1.8}
+.art-icon{font-size:65px;background:#ffffff18;border:1px solid #ffffff30;width:110px;height:110px;border-radius:30px;display:grid;place-items:center;margin-bottom:30px}
+.login-panel{display:grid;place-items:center;padding:35px}.login-box{width:100%;max-width:420px}
+.login-box h2{font-size:31px;margin-bottom:8px}.muted{color:var(--muted);font-size:14px;line-height:1.6}
+.field{margin:18px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.field input,.field select,.control{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:11px;outline:none;background:white;color:var(--dark)}
+.field input:focus,.field select:focus,.control:focus{border-color:var(--primary);box-shadow:0 0 0 3px #635bff16}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+.role{border:1px solid var(--border);background:white;border-radius:12px;padding:15px;color:var(--muted);font-size:14px}
+.role.active{border-color:var(--primary);background:#f0efff;color:var(--primary);font-weight:700}
+.btn{border:0;background:var(--primary);color:white;padding:13px 17px;border-radius:11px;font-weight:700}
+.btn:hover{filter:brightness(.96)}.btn-full{width:100%}.btn-light{background:#f0efff;color:var(--primary)}.btn-danger{background:#fff0f0;color:#c34242}
+.message{margin-top:12px;font-size:13px;color:#c34242}.demo-note{padding:12px;border-radius:10px;background:#f5f4ff;color:#5e58a9;font-size:12px;margin-top:17px;line-height:1.6}
+.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:25px 17px;display:flex;flex-direction:column}
+.sidebar .brand{font-size:23px;padding:3px 12px 32px}.nav-label{color:#a0a2b3;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:0 12px;margin-bottom:12px}
+.nav-btn{border:0;background:transparent;width:100%;text-align:left;padding:13px 12px;border-radius:10px;margin-bottom:5px;color:#6c6e83;font-weight:600}
+.nav-btn.active,.nav-btn:hover{background:#f0efff;color:var(--primary)}
+.sidebar-bottom{margin-top:auto;padding:15px 10px 0}.profile{border-top:1px solid var(--border);padding-top:17px;display:flex;align-items:center;gap:10px}
+.avatar{width:39px;height:39px;border-radius:13px;background:#eeecff;color:var(--primary);display:grid;place-items:center;font-weight:800;flex-shrink:0}
+.profile-name{font-size:13px;font-weight:700}.profile-role{font-size:11px;color:var(--muted);margin-top:4px}
+.main{min-width:0;padding:32px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
+.topbar h1{margin:0;font-size:27px}.topbar p{margin:7px 0 0}.pill{background:#ecebff;color:#5c54e8;border-radius:30px;padding:8px 12px;font-size:12px;font-weight:700;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:25px}
+.stat,.panel{background:white;border:1px solid var(--border);border-radius:17px;padding:22px}
+.stat-label{font-size:13px;color:var(--muted)}.stat-number{font-size:30px;font-weight:800;margin-top:12px}.stat-icon{float:right;font-size:22px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}.section-head h2{margin:0;font-size:19px}
+.filters{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:10px;margin-bottom:19px}
+.resources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.resource{border:1px solid var(--border);border-radius:15px;padding:18px;background:white;min-width:0}
+.resource-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.file-icon{width:44px;height:44px;border-radius:12px;background:#f0efff;display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.resource h3{font-size:16px;margin:14px 0 8px;overflow-wrap:anywhere}
+.tag{display:inline-block;border-radius:7px;padding:6px 8px;font-size:11px;background:#f3f3fa;color:#686a82;margin:3px 4px 3px 0}
+.resource-meta{font-size:12px;color:var(--muted);line-height:1.8;margin:8px 0 13px;overflow-wrap:anywhere}
+.resource-actions{display:flex;flex-wrap:wrap;gap:8px}.resource-actions .btn{font-size:12px;padding:9px 12px}
+.empty{text-align:center;padding:45px 15px;color:var(--muted);background:white;border:1px dashed #d9dbea;border-radius:15px;grid-column:1/-1}
+.empty div{font-size:35px;margin-bottom:10px}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.upload-grid .wide{grid-column:1/-1}.upload-panel{max-width:760px}
+.small-note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:12px}
+@media(max-width:900px){.login-page{grid-template-columns:1fr}.login-art{display:none}.app{grid-template-columns:1fr}.sidebar{padding:13px;border-right:0;border-bottom:1px solid var(--border)}.sidebar .brand{padding:5px 8px 13px}.nav-label,.sidebar-bottom{display:none}.nav-btn{width:auto;display:inline-block;padding:10px;margin:0 3px 0 0}.main{padding:20px}}
+@media(max-width:600px){.stats{grid-template-columns:1fr;gap:10px}.stat{padding:16px}.stat-number{font-size:24px}.filters,.resources,.upload-grid{grid-template-columns:1fr}.upload-grid .wide{grid-column:auto}.topbar h1{font-size:22px}.main{padding:14px}.login-panel{padding:22px}}
+</style>
+</head>
+<body>
+
+<section id="loginPage" class="login-page">
+  <div class="login-art">
+    <div class="brand">Campus<span>Brain</span></div>
+    <div class="art-content">
+      <div class="art-icon">🧠</div>
+      <h1>Knowledge that moves you forward.</h1>
+      <p>A dedicated CSE learning space for notes, lab manuals, assignments, and previous question papers.</p>
+    </div>
+    <div style="color:#d9d6ff;font-size:12px">CSE DEPARTMENT · LEARN TOGETHER</div>
+  </div>
+  <div class="login-panel">
+    <div class="login-box">
+      <h2 id="authTitle">Welcome back</h2>
+      <p class="muted" id="authSubtitle">Sign in to your CSE knowledge hub.</p>
+      <div class="roles">
+        <button type="button" class="role active" data-role="Student" onclick="chooseRole('Student')">🎓 Student</button>
+        <button type="button" class="role" data-role="Faculty" onclick="chooseRole('Faculty')">👩‍🏫 Faculty</button>
+      </div>
+      <form id="authForm">
+        <div class="field" id="nameField">
+          <label for="authName">Full name</label>
+          <input id="authName" placeholder="Enter your full name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="authEmail">Email or username</label>
+          <input id="authEmail" required placeholder="Enter email or username" autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="authPassword">Password</label>
+          <input id="authPassword" type="password" required placeholder="Enter password" autocomplete="current-password">
+        </div>
+        <button class="btn btn-full" type="submit" id="authSubmit">Sign In</button>
+        <div id="authMessage" class="message"></div>
+      </form>
+      <p style="font-size:13px;margin-top:20px">
+        <span id="toggleText">New to CampusBrain?</span>
+        <button id="toggleAuth" type="button" class="btn btn-light" style="padding:6px 10px" onclick="toggleMode()">Create account</button>
+      </p>
+      <div class="demo-note">CampusBrain prototype: accounts and uploaded files are stored in this browser. Use only test credentials until server-side authentication is implemented.</div>
+    </div>
+  </div>
+</section>
+
+<section id="appPage" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">Campus<span>Brain</span></div>
+    <div class="nav-label">WORKSPACE</div>
+    <button class="nav-btn active" onclick="showPage('dashboard',this)">▦ &nbsp; Dashboard</button>
+    <button class="nav-btn" onclick="showPage('resources',this)">▤ &nbsp; Learning Resources</button>
+    <button class="nav-btn" id="uploadNav" onclick="showPage('upload',this)">＋ &nbsp; Upload Material</button>
+    <div class="sidebar-bottom">
+      <div class="profile">
+        <div class="avatar" id="profileAvatar">U</div>
+        <div><div class="profile-name" id="profileName">User</div><div class="profile-role" id="profileRole">Student</div></div>
+      </div>
+      <button class="nav-btn" onclick="logout()" style="margin-top:12px">↪ &nbsp; Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h1 id="pageTitle">Dashboard</h1><p class="muted" id="pageSubtitle">Your CSE learning space.</p></div>
+      <span class="pill">💻 CSE DEPARTMENT</span>
+    </div>
+
+    <div id="dashboardPage">
+      <div class="stats">
+        <div class="stat"><span class="stat-icon">📚</span><div class="stat-label">Total resources</div><div class="stat-number" id="statResources">0</div></div>
+        <div class="stat"><span class="stat-icon">📥</span><div class="stat-label">Your uploads</div><div class="stat-number" id="statUploads">0</div></div>
+        <div class="stat"><span class="stat-icon">🗂️</span><div class="stat-label">Available categories</div><div class="stat-number" id="statCategories">0</div></div>
+      </div>
+      <div class="panel">
+        <div class="section-head"><h2>Recently Added</h2><button class="btn btn-light" onclick="showPage('resources')">View all →</button></div>
+        <div class="resources" id="recentResources"></div>
+      </div>
+    </div>
+
+    <div id="resourcesPage" class="hidden">
+      <div class="panel">
+        <div class="section-head"><h2>Explore CSE Resources</h2><span class="muted" id="resourceCount">0 resources</span></div>
+        <div class="filters">
+          <input class="control" id="searchFilter" placeholder="Search title, subject, faculty..." oninput="renderResources()">
+          <select class="control" id="yearFilter" onchange="renderResources()">
+            <option value="">All years</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+          </select>
+          <select class="control" id="semesterFilter" onchange="renderResources()">
+            <option value="">All semesters</option><option>1st Semester</option><option>2nd Semester</option>
+          </select>
+          <select class="control" id="categoryFilter" onchange="renderResources()">
+            <option value="">All categories</option><option>Notes</option><option>Lab Manual</option><option>Previous Mid Question</option><option>Previous Semester Question</option><option>Assignment</option><option>Reference Material</option><option>Other</option>
+          </select>
+        </div>
+        <div class="resources" id="allResources"></div>
+      </div>
+    </div>
+
+    <div id="uploadPage" class="hidden">
+      <div class="panel upload-panel">
+        <div class="section-head"><h2>Upload Learning Material</h2></div>
+        <p class="muted">Choose the year and semester for which this material is intended.</p>
+        <form id="uploadForm">
+          <div class="upload-grid">
+            <div class="field"><label for="materialTitle">Material title *</label><input id="materialTitle" required maxlength="100" placeholder="e.g. Data Structures Unit 1 Notes"></div>
+            <div class="field"><label for="subject">Subject *</label><input id="subject" required maxlength="80" placeholder="e.g. Data Structures"></div>
+            <div class="field"><label for="facultyName">Faculty name *</label><input id="facultyName" required maxlength="80" placeholder="Enter faculty name"></div>
+            <div class="field"><label for="materialCategory">Material category *</label>
+              <select id="materialCategory" required><option value="">Select category</option><option>Notes</option><option>Lab Manual</option><option>Previous Mid Question</option><option>Previous Semester Question</option><option>Assignment</option><option>Reference Material</option><option>Other</option></select>
+            </div>
+            <div class="field"><label for="uploadYear">B.Tech year *</label>
+              <select id="uploadYear" required><option value="">Select year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select>
+            </div>
+            <div class="field"><label for="uploadSemester">Semester *</label>
+              <select id="uploadSemester" required><option value="">Select semester</option><option>1st Semester</option><option>2nd Semester</option></select>
+            </div>
+            <div class="field wide"><label for="materialFile">Select file * (PDF, DOC, DOCX, PPT, PPTX, TXT; max 10 MB)</label><input id="materialFile" type="file" required accept=".pdf,.doc,.docx,.ppt,.pptx,.txt"></div>
+            <div class="wide"><button class="btn" type="submit">↑ &nbsp; Upload Material</button><div id="uploadMessage" class="message"></div></div>
+          </div>
+        </form>
+        <p class="small-note">Faculty can delete only their own uploads. Files are currently stored in browser storage, not in the H2 database.</p>
+      </div>
+    </div>
+  </main>
+</section>
+
+<script>
+const USERS_KEY = "campusbrain_demo_users_v3";
+const RESOURCES_KEY = "campusbrain_demo_resources_v3";
+const SESSION_KEY = "campusbrain_demo_session_v3";
+
+let users = [];
+let resources = [];
+let currentUser = null;
+let selectedRole = "Student";
+let registerMode = false;
+
+const $ = id => document.getElementById(id);
+
+function loadData() {
+  try {
+    users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+    resources = JSON.parse(localStorage.getItem(RESOURCES_KEY) || "[]");
+    if (!Array.isArray(users)) users = [];
+    if (!Array.isArray(resources)) resources = [];
+  } catch (e) {
+    users = [];
+    resources = [];
+  }
+}
+function saveUsers() { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
+function saveResources() { localStorage.setItem(RESOURCES_KEY, JSON.stringify(resources)); }
+
+function chooseRole(role) {
+  selectedRole = role;
+  document.querySelectorAll(".role").forEach(btn => btn.classList.toggle("active", btn.dataset.role === role));
+  updateAuthForm();
+}
+function updateAuthForm() {
+  $("authTitle").textContent = registerMode ? "Create your account" : "Welcome back";
+  $("authSubtitle").textContent = registerMode ? "Join your CSE learning community." : "Sign in to your CSE knowledge hub.";
+  $("nameField").classList.toggle("hidden", !registerMode);
+  $("authName").required = registerMode;
+  $("authSubmit").textContent = registerMode ? "Create Account" : "Sign In";
+  $("toggleText").textContent = registerMode ? "Already registered?" : "New to CampusBrain?";
+  $("toggleAuth").textContent = registerMode ? "Sign in" : "Create account";
+  $("authMessage").textContent = "";
+}
+function toggleMode() { registerMode = !registerMode; updateAuthForm(); }
+
+$("authForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  const identity = $("authEmail").value.trim().toLowerCase();
+  const password = $("authPassword").value;
+  const name = $("authName").value.trim();
+
+  if (registerMode) {
+    if (users.some(u => u.identity === identity)) {
+      $("authMessage").textContent = "This email or username is already registered.";
+      return;
+    }
+    users.push({name, identity, password, role:selectedRole});
+    saveUsers();
+    login(users[users.length - 1]);
+    return;
+  }
+
+  const user = users.find(u => u.identity === identity && u.password === password && u.role === selectedRole);
+  if (!user) {
+    $("authMessage").textContent = "Account not found. Check your role and details, or create an account.";
+    return;
+  }
+  login(user);
+});
+
+function login(user) {
+  currentUser = user;
+  localStorage.setItem(SESSION_KEY, JSON.stringify({identity:user.identity, role:user.role}));
+  $("loginPage").classList.add("hidden");
+  $("appPage").classList.remove("hidden");
+  $("profileName").textContent = user.name;
+  $("profileRole").textContent = user.role;
+  $("profileAvatar").textContent = (user.name || "U").charAt(0).toUpperCase();
+  $("uploadNav").classList.toggle("hidden", user.role !== "Faculty");
+  $("facultyName").value = user.role === "Faculty" ? user.name : "";
+  updateStats();
+  renderRecent();
+  showPage("dashboard");
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem(SESSION_KEY);
+  $("appPage").classList.add("hidden");
+  $("loginPage").classList.remove("hidden");
+  $("authPassword").value = "";
+}
+
+function restoreSession() {
+  try {
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+    if (!session) return;
+    const user = users.find(u => u.identity === session.identity && u.role === session.role);
+    if (user) login(user);
+  } catch (e) {
+    localStorage.removeItem(SESSION_KEY);
+  }
+}
+
+function showPage(page, button) {
+  ["dashboard","resources","upload"].forEach(name => $(name + "Page").classList.toggle("hidden", name !== page));
+  document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+  if (button) button.classList.add("active");
+  else {
+    const nav = document.querySelector(`.nav-btn[onclick="showPage('${page}',this)"]`);
+    if (nav) nav.classList.add("active");
+  }
+  const titles = {
+    dashboard:["Dashboard","Your CSE learning space."],
+    resources:["Learning Resources","Find materials for your year and semester."],
+    upload:["Upload Material","Share resources with the right CSE students."]
+  };
+  $("pageTitle").textContent = titles[page][0];
+  $("pageSubtitle").textContent = titles[page][1];
+  if (page === "resources") renderResources();
+  if (page === "dashboard") renderRecent();
+}
+
+function updateStats() {
+  $("statResources").textContent = resources.length;
+  $("statUploads").textContent = currentUser ? resources.filter(r => r.uploaderIdentity === currentUser.identity).length : 0;
+  $("statCategories").textContent = new Set(resources.map(r => r.category)).size;
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[ch]);
+}
+function fileEmoji(fileName) {
+  const ext = (fileName.split(".").pop() || "").toLowerCase();
+  if (ext === "pdf") return "📕";
+  if (["ppt","pptx"].includes(ext)) return "📊";
+  if (["doc","docx"].includes(ext)) return "📝";
+  return "📄";
+}
+
+function resourceCard(r) {
+  const isOwner = currentUser && currentUser.role === "Faculty" && r.uploaderIdentity === currentUser.identity;
+  const actions = [];
+  if (r.fileData) actions.push(`<button class="btn btn-light" onclick="downloadResource('${r.id}')">Download</button>`);
+  if (isOwner) actions.push(`<button class="btn btn-danger" onclick="deleteResource('${r.id}')">Delete</button>`);
+
+  return `
+    <article class="resource">
+      <div class="resource-top"><div class="file-icon">${fileEmoji(r.fileName || "")}</div><span class="tag">${escapeHTML(r.category)}</span></div>
+      <h3>${escapeHTML(r.title)}</h3>
+      <div><span class="tag">${escapeHTML(r.year)}</span><span class="tag">${escapeHTML(r.semester)}</span></div>
+      <div class="resource-meta">
+        <div><strong>Subject:</strong> ${escapeHTML(r.subject)}</div>
+        <div><strong>Faculty:</strong> ${escapeHTML(r.facultyName)}</div>
+        <div><strong>File:</strong> ${escapeHTML(r.fileName)}</div>
+        <div><strong>Added:</strong> ${escapeHTML(r.date)}</div>
+      </div>
+      <div class="resource-actions">${actions.join("")}</div>
+    </article>`;
+}
+
+function renderRecent() {
+  const recent = [...resources].sort((a,b) => b.createdAt - a.createdAt).slice(0,4);
+  $("recentResources").innerHTML = recent.length
+    ? recent.map(r => resourceCard(r)).join("")
+    : `<div class="empty"><div>📚</div><strong>No resources uploaded yet</strong><p>Materials will appear here after faculty upload them.</p></div>`;
+}
+
+function renderResources() {
+  const search = $("searchFilter").value.trim().toLowerCase();
+  const year = $("yearFilter").value;
+  const semester = $("semesterFilter").value;
+  const category = $("categoryFilter").value;
+  const filtered = resources.filter(r => {
+    const text = `${r.title} ${r.subject} ${r.facultyName} ${r.fileName}`.toLowerCase();
+    return (!search || text.includes(search)) && (!year || r.year === year)
+      && (!semester || r.semester === semester) && (!category || r.category === category);
+  }).sort((a,b) => b.createdAt - a.createdAt);
+
+  $("resourceCount").textContent = `${filtered.length} resource${filtered.length === 1 ? "" : "s"}`;
+  $("allResources").innerHTML = filtered.length
+    ? filtered.map(r => resourceCard(r)).join("")
+    : `<div class="empty"><div>🔎</div><strong>No matching resources</strong><p>Try another year, semester, or search term.</p></div>`;
+}
+
+$("uploadForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+  $("uploadMessage").style.color = "#c34242";
+  $("uploadMessage").textContent = "";
+
+  if (!currentUser || currentUser.role !== "Faculty") {
+    $("uploadMessage").textContent = "Only faculty can upload materials.";
+    return;
+  }
+
+  const file = $("materialFile").files[0];
+  if (!file) {
+    $("uploadMessage").textContent = "Please choose a file.";
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    $("uploadMessage").textContent = "File must be 10 MB or smaller.";
+    return;
+  }
+  if (!/\.(pdf|doc|docx|ppt|pptx|txt)$/i.test(file.name)) {
+    $("uploadMessage").textContent = "Choose a PDF, DOC, DOCX, PPT, PPTX, or TXT file.";
+    return;
+  }
+
+  try {
+    const fileData = await readFileAsDataURL(file);
+    resources.push({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      title: $("materialTitle").value.trim(),
+      subject: $("subject").value.trim(),
+      facultyName: $("facultyName").value.trim(),
+      category: $("materialCategory").value,
+      year: $("uploadYear").value,
+      semester: $("uploadSemester").value,
+      fileName: file.name,
+      fileData,
+      date: new Date().toLocaleDateString(),
+      createdAt: Date.now(),
+      uploaderIdentity: currentUser.identity
+    });
+    saveResources();
+    $("uploadForm").reset();
+    $("facultyName").value = currentUser.name || "";
+    updateStats();
+    renderRecent();
+    $("uploadMessage").style.color = "#16834a";
+    $("uploadMessage").textContent = "Material uploaded successfully!";
+  } catch (error) {
+    $("uploadMessage").textContent = "Could not save this file. Browser storage may be full.";
+  }
+});
+
+function readFileAsDataURL(file) {
+  return new Promise((resolve,reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function downloadResource(id) {
+  const resource = resources.find(r => r.id === id);
+  if (!resource || !resource.fileData) {
+    alert("This file is not available in browser storage.");
+    return;
+  }
+  const link = document.createElement("a");
+  link.href = resource.fileData;
+  link.download = resource.fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function deleteResource(id) {
+  if (!currentUser || currentUser.role !== "Faculty") {
+    alert("Only faculty can delete uploads.");
+    return;
+  }
+  const resource = resources.find(r => r.id === id);
+  if (!resource) {
+    alert("Resource not found.");
+    return;
+  }
+  if (resource.uploaderIdentity !== currentUser.identity) {
+    alert("You can only delete files you uploaded.");
+    return;
+  }
+  if (!confirm("Are you sure you want to delete this uploaded file?")) return;
+
+  resources = resources.filter(r => r.id !== id);
+  saveResources();
+  updateStats();
+  renderRecent();
+  renderResources();
+  alert("Your uploaded file has been deleted.");
+}
+
+loadData();
+updateAuthForm();
+updateStats();
+restoreSession();
+</script>
+</body>
+</html>
